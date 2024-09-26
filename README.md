@@ -1,6 +1,6 @@
 # Real-Time Systems Experiments 🕒
 
-This repository contains codes and experiments conducted during the Real-Time Systems course. Currently, we have the following program available:
+Repository with codes, experiments and possible annotations conducted during the Real-Time Systems study.
 
 ## Programs
 
