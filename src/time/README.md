@@ -9,3 +9,6 @@ cd repository/path
 chmod +x bin/run #if necessary
 bin/run time # use -b to force build
 ```
+
+Perform 8 executions on a Macbook M1 with 8 cores this is the result we have:
+![cores](cores.png)
