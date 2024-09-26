@@ -7,7 +7,7 @@ The program is an experiment designed to measure execution time in a real-time s
 ```bash
 cd repository/path
 chmod +x bin/run #if necessary
-bin/run time # use -b to force build
+bin/run sleep # use -b to force build
 ```
 
 Perform 8 executions on a Macbook M1 with 8 cores this is the result we have:
