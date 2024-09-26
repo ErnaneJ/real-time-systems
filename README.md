@@ -5,6 +5,7 @@ Repository with codes, experiments and possible annotations conducted during the
 ## Programs
 
 - [x] [Time](./src/time/);
+- [x] [Sleep](./src/sleep/);
 
 ## Running the Program Using the `bin/run` Script 🚀
 
