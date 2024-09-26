@@ -1,0 +1,82 @@
+#!/bin/bash
+
+BIN_PATH="$(cd "$(dirname "$0")" && pwd)"
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <project> [-b] 🌟"
+  exit 1
+fi
+
+PROJECT="$1"
+BUILD=false
+
+if [ "$2" == "-b" ]; then
+  BUILD=true
+fi
+
+PROJECT_DIR="$BIN_PATH/../src/$PROJECT"
+
+if [ ! -d "$PROJECT_DIR" ]; then
+  echo "Project '$PROJECT' not found. ❌"
+  exit 1
+fi
+
+echo "Project '$PROJECT' found! ✅"
+
+CMAKE_FILE="$PROJECT_DIR/CMakeLists.txt"
+if [ ! -f "$CMAKE_FILE" ]; then
+  echo
+  echo "CMakeLists.txt not found. Creating a new one... 📝"
+
+  CMAKE_VERSION=$(cmake --version | head -n 1 | awk '{print $3}')
+  cat <<EOL > "$CMAKE_FILE"
+cmake_minimum_required(VERSION $CMAKE_VERSION)
+
+project($PROJECT VERSION 0.0.1 LANGUAGES C CXX)
+
+add_executable(main main.cpp)
+
+target_link_libraries(main)
+EOL
+  echo
+  echo "---------------"
+  cat $CMAKE_FILE
+  echo "---------------"
+  echo
+  echo "CMakeLists.txt created successfully! ✅"
+fi
+
+BUILD_DIR="$PROJECT_DIR/build"
+if [ ! -d "$BUILD_DIR" ]; then
+  echo
+  echo "Build directory not found. Creating it... 🔧"
+  mkdir "$BUILD_DIR"
+  echo "Build directory created! ✅"
+  echo
+fi
+
+cd "$BUILD_DIR" || exit
+
+if [ ! -f "./main" ]; then
+  echo
+  echo "Executable 'main' not found. Starting build process... 🔨"
+  echo "Building \"$PROJECT\" project... ⚙️"
+  echo
+  cmake $PROJECT_DIR
+  make 
+else
+  if [ "$BUILD" = true ]; then
+    echo
+    echo "Building \"$PROJECT\" project... ⚙️"
+    echo
+    cmake $PROJECT_DIR
+    make
+  fi
+fi
+
+echo
+echo "Executing \"$PROJECT\" project... 🚀"
+echo
+
+./main
+echo
