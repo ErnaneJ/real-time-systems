@@ -6,64 +6,23 @@ This repository contains codes and experiments conducted during the Real-Time Sy
 
 - [x] [Time](./src/time/);
 
-### Running the Program Using the `bin/run` Script 🚀
+## Running the Program Using the `bin/run` Script 🚀
 
-1. **Navigate to the Repository Root Directory:**
-  
-  ```bash
-  cd path/this/repo
-  ```
+```bash
+cd path/this/repo # Navigate to the repository directory
+chmod +x bin/run # Ensure that the script has the necessary execute permissions
+bin/run time # use -b to force build the program before executing "bin/run time -b"
+```
 
-2. **Make the `run` Script Executable:**
-  Ensure that the script has the necessary execute permissions:
-  ```bash
-  chmod +x bin/run
-  ```
+## Manual Execution Programs Using CMake 🛠️
 
-3. **Execute the Program:**
-  You can run the program directly with the following command:
-  ```bash
-  bin/run time
-  ```
-  - To force build the program before executing, use:
-  ```bash
-  bin/run time -b
-  ```
-
-### Manual Execution Programs Using CMake 🛠️
-
-1. **Navigate to the Project Directory:**
-
-  ```bash
-  cd src/$PROJECT
-  ```
-
-2. **Create a Build Directory:**
-  If it doesn't already exist, create a build directory:
-
-  ```bash
-  mkdir build
-  cd build
-  ```
-
-3. **Run CMake to Configure the Project:**
-
-  ```bash
-  cmake ..
-  ```
-
-4. **Build the Project:**
-
-  ```bash
-  make
-  ```
-
-5. **Execute the Program:**
-
-  ```bash
-  ./main
-  ```
-
-## Additional Information
-
-Ensure you have the necessary dependencies installed, such as CMake and any libraries required by the program.
+```bash
+cd path/this/repo
+cp template/CMakeLists.txt.example src/project/CMakeLists.txt # copy and configure/edit CMakeLists.txt file
+cd src/project
+mkdir build
+cd build
+cmake ..
+make
+./main
+```
