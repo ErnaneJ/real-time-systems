@@ -6,6 +6,10 @@ Repository with codes, experiments and possible annotations conducted during the
 
 - [x] [Time](./src/time/);
 - [x] [Sleep](./src/sleep/);
+- [x] [localtime](./src/localtime/);
+- [x] [gmtime](./src/gmtime/);
+- [x] [bdaytime](./src/bdaytime/);
+- [x] [clock](./src/clock/);
 
 ## Running the Program Using the `bin/run` Script 🚀
 
