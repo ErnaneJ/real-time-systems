@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 #include <unistd.h>
 #include <iomanip>
 
@@ -43,9 +44,10 @@ int main()
   while (true) {
     time_t tempo_valor;
     time(&tempo_valor);
-    struct tm *tm_ptr = localtime(&tempo_valor);
+    struct tm *tm_ptr = gmtime(&tempo_valor);
 
-    std::cout << "\033[2J\033[1;1H"; // ANSI escape to clear the screen and move the cursor to the beginning
+    // std::cout << "\033[2J\033[1;1H"; // ANSI escape to clear the screen and move the cursor to the beginning
+    system("clear");
 
     displayTime(tm_ptr->tm_hour, tm_ptr->tm_min, tm_ptr->tm_sec);
     std::cout << "│ \t   "<< tm_ptr->tm_mday << "/" 
