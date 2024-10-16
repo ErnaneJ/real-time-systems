@@ -2,15 +2,6 @@
 
 Repository with codes, experiments and possible annotations conducted during the Real-Time Systems study.
 
-## Programs
-
-- [x] [Time](./src/time/);
-- [x] [Sleep](./src/sleep/);
-- [x] [localtime](./src/localtime/);
-- [x] [gmtime](./src/gmtime/);
-- [x] [bdaytime](./src/bdaytime/);
-- [x] [clock](./src/clock/);
-
 ## Running the Program Using the `bin/run` Script 🚀
 
 ```bash
@@ -30,4 +21,14 @@ cd build
 cmake ..
 make
 ./main
+```
+
+### VENV
+
+```
+python3 -m venv venv
+deactivate
+source venv/bin/activate
+pip freeze > requirements.txt
+pip install -r requirements.txt
 ```
