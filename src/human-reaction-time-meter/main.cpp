@@ -104,16 +104,16 @@ cv::Scalar getRandomColor(int& correctKey)
   
   switch (color) 
   {
-    case 0: 
+    case ARROW_UP: 
       correctKey = ARROW_UP;
       return cv::Scalar(0, 255, 255); // Yellow
-    case 1:
+    case ARROW_RIGHT:
       correctKey = ARROW_RIGHT;
-      return cv::Scalar(0, 0, 255);   // Blue
-    case 2:
-      correctKey = ARROW_LEFT;
       return cv::Scalar(255, 0, 0);   // Red
-    case 3:
+    case ARROW_LEFT:
+      correctKey = ARROW_LEFT;
+      return cv::Scalar(0, 0, 255);   // Blue
+    case ARROW_DOWN:
       correctKey = ARROW_DOWN;
       return cv::Scalar(0, 255, 0);   // Green
   }
@@ -215,17 +215,19 @@ int main()
       
       if (keyPressed == 27) 
       {
-        std::cout << std::endl << "❌ Game aborted.\n";
+        std::cout << std::endl << "\n❌ Game aborted.\n";
         exit(0);
       } 
       else if (keyPressed == correctKey) 
       {
+        std::cout << "✅ Correct!" << std::endl;
         responseTimes.push_back(elapsedTimeSeconds);
         correctAnswers++;
         break;
       } 
       else if (keyPressed == ARROW_UP || keyPressed == ARROW_DOWN || keyPressed == ARROW_LEFT || keyPressed == ARROW_RIGHT) 
       {
+        std::cout << "❌ Incorrect!" << std::endl;
         responseTimes.push_back(elapsedTimeSeconds);
         break;
       }
@@ -242,6 +244,8 @@ int main()
   displayPreviousResults();
   
   std::cout << "\n✅ Results saved.\n";
+
+  system("cd $(pwd)/../plot && source venv/bin/activate && pip install -r requirements.txt && python main.py");
 
   return 0;
 };
