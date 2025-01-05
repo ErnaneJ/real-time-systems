@@ -5,7 +5,7 @@
 #include <iostream>
 #include <ctime>
 
-pthread_mutex_t mutexL3, mutexL4, mutexL6;
+pthread_mutex_t mutexF1, mutexF2, mutexF3;
 
 char railway_state[9][100] = {
   "   ---[   ]--- ---[   ]---   ",
@@ -77,75 +77,83 @@ void *train_thread(void *arg)
     {
     case 1:
       // T01 -> L3 -> L4 -> L1 -> L2;
-      pthread_mutex_lock(&mutexL3);
-      update_railway(2, 13, "T01"); // T01 -> L3
-      sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(2, 13, "   "); // NULL -> L3
-      pthread_mutex_unlock(&mutexL3);
-
-      pthread_mutex_lock(&mutexL4);
-      update_railway(4, 7, "T01"); // T01 -> L4
-      sleep(1); // sleep(rand() % 3 + 1);
       update_railway(4, 7, "   "); // NULL -> L4
-      pthread_mutex_unlock(&mutexL4);
-
       update_railway(2, 1, "T01"); // T01 -> L1
       sleep(1); // sleep(rand() % 3 + 1);
 
       update_railway(2, 1, "   "); // NULL -> L1
       update_railway(0, 7, "T01"); // T01 -> L2
       sleep(1); // sleep(rand() % 3 + 1);
+
+      printf("T01 is waiting for L3\n");
+      pthread_mutex_lock(&mutexF1);
       update_railway(0, 7, "   "); // NULL -> L2
+      update_railway(2, 13, "T01"); // T01 -> L3
+      sleep(1); // sleep(rand() % 3 + 1);
+      printf("T01 in L3-L8 is waiting for L4-L9\n");
+      
+      pthread_mutex_lock(&mutexF2);
+      pthread_mutex_unlock(&mutexF1);
+      
+      update_railway(2, 13, "   "); // NULL -> L3
+      update_railway(4, 7, "T01"); // T01 -> L4
+      sleep(1); // sleep(rand() % 3 + 1);
+      pthread_mutex_unlock(&mutexF2);
       break;
 
     case 2:
-      // T02 -> L6 -> L3 -> L7 -> L5;
-      pthread_mutex_lock(&mutexL6);
-      update_railway(4, 19, "T02"); // T02 -> L6
-      sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(4, 19, "   "); // NULL -> L6
-      pthread_mutex_unlock(&mutexL6);
-
-      pthread_mutex_lock(&mutexL3);
-      update_railway(2, 13, "T02"); // T02 -> L3
-      sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(2, 13, "   "); // NULL -> L3
-      pthread_mutex_unlock(&mutexL3);
-
-      update_railway(0, 19, "T02"); // T02 -> L7
+      // T02 -> L7 -> L8 -> L5 -> L6;
+      update_railway(2, 13, "   "); // NULL -> L3(L8)
+      update_railway(0, 19, "T02"); // T02 -> L5
       sleep(1); // sleep(rand() % 3 + 1);
 
-      update_railway(0, 19, "   "); // NULL -> L7
-      update_railway(2, 25, "T02"); // T02 -> L5
+      update_railway(0, 19, "   "); // NULL -> L5
+      update_railway(2, 25, "T02"); // T02 -> L6
       sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(2, 25, "   "); // NULL -> L5
+
+      printf("T02 in L7-L10 is waiting for L7\n");
+      pthread_mutex_lock(&mutexF3);
+      update_railway(2, 25, "   "); // NULL -> L6
+      update_railway(4, 19, "T02"); // T02 -> L7
+      sleep(1); // sleep(rand() % 3 + 1);
+      printf("T02 in L7-L10 is waiting for L3-L8\n");
+      
+      pthread_mutex_lock(&mutexF1);
+      pthread_mutex_unlock(&mutexF3);
+      
+      update_railway(4, 19, "   "); // NULL -> L7
+      update_railway(2, 13, "T02"); // T02 -> L3(L8)
+      sleep(1); // sleep(rand() % 3 + 1);
+      pthread_mutex_unlock(&mutexF1);
       break;
 
     case 3:
-      // // T01 -> L3 -> L4 -> L1 -> L2;
-      pthread_mutex_lock(&mutexL4);
-      update_railway(4, 7, "T03"); // T03 -> L4
-      sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(4, 7, "   "); // NULL -> L4
-      pthread_mutex_unlock(&mutexL4);
-
-      pthread_mutex_lock(&mutexL6);
-      update_railway(4, 19, "T03"); // T03 -> L6
-      sleep(1); // sleep(rand() % 3 + 1);
-      update_railway(4, 19, "   "); // NULL -> L6
-      pthread_mutex_unlock(&mutexL6);
-
-      update_railway(6, 25, "T03"); // T02 -> L9
+      // T03 -> L4(L9) -> L7(L10) -> L11 -> L12 -> L8;
+      update_railway(6, 25, "   "); // NULL -> L11
+      update_railway(8, 13, "T03"); // T02 -> L12
       sleep(1); // sleep(rand() % 3 + 1);
 
-      update_railway(6, 25, "   "); // NULL -> L9
-      update_railway(8, 13, "T03"); // T02 -> L10
-      sleep(1); // sleep(rand() % 3 + 1);
-
-      update_railway(8, 13, "   "); // NULL -> L10
+      update_railway(8, 13, "   "); // NULL -> L12
       update_railway(6, 1, "T03"); // T02 -> L8
       sleep(1); // sleep(rand() % 3 + 1);
+
+      printf("T03 is waiting for L9\n");
+      pthread_mutex_lock(&mutexF2);
       update_railway(6, 1, "   "); // NULL -> L8
+      update_railway(4, 7, "T03"); // T03 -> L4(L9)
+      sleep(1); // sleep(rand() % 3 + 1);
+      printf("T03 L4-L9 is waiting for L7-L10\n");
+      
+      pthread_mutex_unlock(&mutexF2); // Critical order, reversing these two lines causes deadlock
+      pthread_mutex_lock(&mutexF3); // Critical order, reversing these two lines causes deadlock
+      
+      update_railway(4, 7, "   "); // NULL -> L4(L9)
+      update_railway(4, 19, "T03"); // T03 -> L7(L10)
+      sleep(1); // sleep(rand() % 3 + 1);
+      update_railway(4, 19, "   "); // NULL -> L7(L10)
+      update_railway(6, 25, "T03"); // T02 -> L11
+      sleep(1); // sleep(rand() % 3 + 1);
+      pthread_mutex_unlock(&mutexF3);
       break;
     }
   }
@@ -163,9 +171,9 @@ void *train_thread(void *arg)
  */
 int main()
 {
-  pthread_mutex_init(&mutexL3, NULL);
-  pthread_mutex_init(&mutexL4, NULL);
-  pthread_mutex_init(&mutexL6, NULL);
+  pthread_mutex_init(&mutexF1, NULL);
+  pthread_mutex_init(&mutexF2, NULL);
+  pthread_mutex_init(&mutexF3, NULL);
 
   pthread_t train_threads[3];
   int train_ids[3] = {1, 2, 3};
@@ -179,9 +187,9 @@ int main()
     pthread_join(train_threads[i], NULL);
   }
 
-  pthread_mutex_destroy(&mutexL3);
-  pthread_mutex_destroy(&mutexL4);
-  pthread_mutex_destroy(&mutexL6);
+  pthread_mutex_destroy(&mutexF1);
+  pthread_mutex_destroy(&mutexF2);
+  pthread_mutex_destroy(&mutexF3);
 
   return 0;
 };
